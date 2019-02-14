@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Task4
 {
@@ -10,18 +11,34 @@ namespace Task4
     {
         static void Main(string[] args)
         {
-            int n = int.Parse(Console.ReadLine());//parsing a number into integer, it will be size of an array
-            string[,] arr = new string[n, n];//creating a 2d array n*n size
-            for (int i = 0; i < n; i++)//loop for lines of pyramid, number of lines is equal to the size of the array
+            string path = "path";//имя папки для создания файла
+            string path1 = "path1";//конечная папка для копирования файла
+
+            string fileName = "Fuck.txt";//название файла
+
+            string source = @"D:\issakul\KBTU\PP2\Week 2\Task4";//путь к директории, в которой будут создаваться папки и файлы
+            string sourcePath = Path.Combine(source, path);//путь к первой папке
+            string targetPath = Path.Combine(source, path1);//путь ко второй папке
+
+            if (!Directory.Exists(sourcePath))//если такой папки еще нет
             {
-                for (int j = 0; j <= i; j++)//loop for printing columns, number of columns is equal to the order number of the current line
-                {
-                    arr[i, j] = "[*]";//giving the values to the elements of an array
-                    Console.Write(arr[i, j]);//printing required symbol
-                }
-                Console.WriteLine();//new line after the first loop ends
+                Directory.CreateDirectory(sourcePath);//то мы ее создаем
             }
-            Console.ReadKey();//closing console only by pressing a key
+
+            string fileSource = Path.Combine(sourcePath, fileName);//путь к исходному файлу
+
+            FileStream fs = File.Create(fileSource);//поток для создания файла по данному пути
+            fs.Close();//закрываем поток чтобы не было исключений и ошибок
+
+            if (!Directory.Exists(targetPath))//если такой папки еще нет
+            {
+                Directory.CreateDirectory(targetPath);//то мы ее создаем
+            }
+
+            string fileTarget = Path.Combine(targetPath, fileName);//путь к папке в которую будем копировать файл
+
+            File.Copy(fileSource, fileTarget);//копируем файл в нужную папку
+            File.Delete(fileSource);//удаляем оригинал
         }
     }
 }
