@@ -1,79 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task2
-{
-    class Student//creating a class "Student"
-    {
-        public string name;//creating public string name
-        public string id;//creating public string id
-        public int year;//creating public integer year
-
-        public Student(string name, string id)//constructor which takes two parameters (name and id)
-        {
-            this.name = name;//equating variables of class to the variables of constructor
-            this.id = id;
-        }
-
-        public void Increment()//method which increments the year of study and prints name, id and year
-        {
-            year++;//incrementing the year
-            Console.WriteLine("Student: {0}; ID: {1}; Increased Year: {2}", name, id, year);//printing values
-        }
-    }
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Student maashok = new Student("Mariya Mordvinova", "18BD110992");//creating new instance of the class "Student" name maashok with two parameters
-            maashok.year = 1;//giving value to the instance's year
-            maashok.Increment();//calling a method for instance
-            Console.ReadKey();//closing console by pressing a key
-        }
-    }
-}
- 
-2 task
- 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
-namespace Task3
+namespace Task2
 {
     class Program
     {
-        static int n;//size of an array
-        static int[] a = new int[1000];//creating array fo input numbers
-        static public void Repeat()//method for pushing elemnts of the given array into new array
+        public static bool isPrime(int a)//функция для определения простого числа
         {
-            int[] ans = new int[2 * n];//new array for duplicated numbers
-            for (int i = 0; i < n; i++)//loop for giving values to the elements
+            if (a == 0 || a == 1)//0 и 1 не простые числа, исключаем их
+                return false;
+            for (int i = 2; i <= Math.Sqrt(a); i++)//проверяем каждое число деля его на числа, меньшие чем квадратный корень данного числа
             {
-                ans[i * 2] = a[i];//current element of dupl. array is equal to the current el. of the given arr
-                ans[i * 2 + 1] = a[i];//next number of dupl. arr. is equal to the current el. of the given array too
-
+                if (a % i == 0)//если число делится на какое-то другое кроме себя и единицы
+                    return false;//возвращаем false
             }
-            for (int i = 0; i < 2 * n; i++)//loop for printing answer
-            {
-                Console.Write(ans[i] + " ");//prints elements of the array with spaces
-            }
+            return true;//в другом случае число является простым
         }
         static void Main(string[] args)
         {
-            n = int.Parse(Console.ReadLine());//reading a value of size and parsing it
-            string[] s = Console.ReadLine().Split();//array of strings for our numbers splitted by spaces
-            for (int i = 0; i < n; i++)//loop for giving values for the elements of the array
+            StreamReader sr = new StreamReader("input.txt");//считываем данные из файла input.txt
+            string sl = sr.ReadLine();//читаем первую линию из файла
+            sr.Close();//закрываем поток
+            string[] s = sl.Split();//записываем принятые значения в массив строк, разделив числа по пробелу
+            int[] nums = new int[s.Length];//создаем массив для чисел, размер которого это число подстрок из массива выше
+            for (int i = 0; i < s.Length; i++)
             {
-                a[i] = int.Parse(s[i]);//parsing elements of string array into integers
+                nums[i] = int.Parse(s[i]);//парсим каждую подстроку (то есть число, которое принято как стринг) в интеджер
             }
-            Repeat();//calling the method
-            Console.ReadKey();//close console by pressing a key
+            StreamWriter sw = new StreamWriter("output.txt");//создаем поток для записи чисел в файл output.txt
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (isPrime(nums[i]) == true)//если элемент массива простое число
+                {
+                    sw.Write(nums[i] + " ");//то мы записываем его в output через пробел
+                }
+            }
+            sw.Close();//закрываем поток, чтобы все данные из буфера записались
+            Console.ReadKey();//консоль не закрывается, пока мы не нажмем любую клавишу
         }
     }
 }
